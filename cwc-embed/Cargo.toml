@@ -1,0 +1,20 @@
+[package]
+name = "cwc-embed"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "ONNX embedding model inference and embedding cache"
+authors = ["Dumitru Stama"]
+
+[dependencies]
+cwc-core = { path = "../cwc-core" }
+ort = { workspace = true }
+tokenizers = { workspace = true }
+sha2 = { workspace = true }
+thiserror = { workspace = true }
+tracing = { workspace = true }
+uuid = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+ndarray = { workspace = true }

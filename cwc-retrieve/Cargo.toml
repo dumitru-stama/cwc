@@ -1,0 +1,17 @@
+[package]
+name = "cwc-retrieve"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "Hybrid retrieval with RRF fusion, MMR diversity, and reranking"
+authors = ["Dumitru Stama"]
+
+[dependencies]
+cwc-core = { path = "../cwc-core" }
+uuid = { workspace = true }
+tracing = { workspace = true }
+ort = { workspace = true }
+tokenizers = { workspace = true }
+ndarray = { workspace = true }
+thiserror = { workspace = true }

@@ -1,0 +1,52 @@
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+authors = ["Dumitru Stama"]
+repository = "https://github.com/dumitru-stama/cwc.git"
+
+[workspace]
+members = [
+    "cwc-core",
+    "cwc-ingest",
+    "cwc-index",
+    "cwc-embed",
+    "cwc-retrieve",
+    "cwc-compile",
+    "cwc-llm",
+    "cwc-verify",
+    "cwc-memory",
+    "cwc-eval",
+    "cwc-session",
+    "cwc-cli",
+    "cwc-server",
+]
+resolver = "2"
+
+[workspace.dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+thiserror = "2"
+tracing = "0.1"
+uuid = { version = "1", features = ["v4", "v5", "serde"] }
+toml = "0.8"
+tiktoken-rs = "0.6"
+glob = "0.3"
+tantivy = "0.22"
+ort = "2.0.0-rc.12"
+ndarray = "0.17"
+tokenizers = { version = "0.22", default-features = false, features = ["onig"] }
+sha2 = "0.10"
+sqlx = { version = "0.8", features = ["runtime-tokio-rustls", "postgres", "uuid", "json", "chrono"] }
+tokio = { version = "1", features = ["rt-multi-thread", "macros"] }
+bincode = "1"
+async-trait = "0.1"
+reqwest = { version = "0.12", default-features = false, features = ["json", "rustls-tls", "stream"] }
+axum = { version = "0.8", features = ["json"] }
+tower-http = { version = "0.6", features = ["cors"] }
+futures = "0.3"
+tokio-stream = "0.1"
+regex = "1"
+jsonschema = "0.29"
+chrono = { version = "0.4", features = ["serde"] }
+dashmap = "6"

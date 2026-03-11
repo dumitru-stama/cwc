@@ -1,0 +1,55 @@
+# CWC — Cloud-Class Model (GPT-4, Claude Opus/Sonnet)
+#
+# For when you're using a cloud API or a very capable model.
+# These models handle large context well and don't need aggressive
+# session management. CWC still adds value through retrieval,
+# citation verification, and token cost reduction.
+
+[mode]
+mode = "complex"                         # Full pipeline — these models handle it
+
+[model]
+llm_endpoint = "http://localhost:8080"   # Or your API-compatible proxy
+embedding_model = "models/bge-small-en-v1.5.onnx"
+rerank_model = "models/bge-reranker-base.onnx"
+context_window = 200000                  # 200K for Opus/GPT-4-turbo
+max_output_tokens = 16384
+
+[retrieval]
+dense_top_k = 100
+sparse_top_k = 100
+rerank_top_k = 40
+final_top_k = 20                         # More evidence — model can handle it
+mmr_lambda = 0.6                         # More diversity
+rrf_k = 60.0
+
+[budget]
+instruction_fraction = 0.05              # Minimal instruction overhead
+sources_fraction = 0.75                  # Maximize evidence
+memory_fraction = 0.10
+output_fraction = 0.10
+
+[verify]
+check_citations = true
+check_schema = true
+check_abstention = true
+
+[paths]
+data_dir = "data"
+index_dir = "index"
+models_dir = "models"
+
+# --- Session management ---
+# Use --model cloud_strong on CLI, or in code:
+#
+#   let config = recommend_config(Some("cloud_strong"), 200000, 16384);
+#
+# The cloud_strong profile uses:
+#   - Minimal compaction (model handles raw output well)
+#   - Reinforcement disabled (model stays on task without nudges)
+#   - Sliding window at 55% utilization
+#   - Hard reset at 65%
+#   - 8000 tail tokens preserved
+#
+# Even with strong models, session optimization saves 30-50% of tokens
+# on long conversations, which directly cuts API costs.

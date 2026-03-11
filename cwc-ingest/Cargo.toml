@@ -1,0 +1,18 @@
+[package]
+name = "cwc-ingest"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "Document loading, chunking, and metadata extraction"
+authors = ["Dumitru Stama"]
+
+[dependencies]
+cwc-core = { path = "../cwc-core" }
+serde = { workspace = true }
+serde_json = { workspace = true }
+thiserror = { workspace = true }
+tracing = { workspace = true }
+uuid = { workspace = true }
+tiktoken-rs = { workspace = true }
+glob = { workspace = true }

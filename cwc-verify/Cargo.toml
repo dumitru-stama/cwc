@@ -1,0 +1,18 @@
+[package]
+name = "cwc-verify"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "Citation verification, schema validation, and abstention detection"
+authors = ["Dumitru Stama"]
+
+[dependencies]
+cwc-core = { path = "../cwc-core" }
+serde_json = { workspace = true }
+tracing = { workspace = true }
+regex = { workspace = true }
+async-trait = { workspace = true }
+tokio = { workspace = true }
+jsonschema = { workspace = true }
+uuid = { workspace = true }

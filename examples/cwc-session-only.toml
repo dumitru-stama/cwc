@@ -1,0 +1,99 @@
+# CWC — Session Management Only
+#
+# Use this when you only need agent session optimization and don't
+# care about the document retrieval pipeline. No LLM server, no
+# embedding model, no database required.
+#
+# This is for teams who:
+# - Have their own retrieval / prompt building
+# - Just want to optimize conversations before sending to any LLM
+# - Want format conversion between OpenAI and Anthropic formats
+# - Want to monitor context budget utilization
+#
+# Usage:
+#
+#   # CLI — optimize a conversation file
+#   cwc session optimize conv.json --format openai --model local_medium --report
+#
+#   # CLI — check budget utilization
+#   cwc session status conv.json --format openai
+#
+#   # HTTP — start server (session endpoints work without LLM)
+#   cwc-serve --bind 0.0.0.0:3000
+#
+#   # HTTP — optimize via API
+#   curl -X POST http://localhost:3000/v1/session/optimize \
+#     -H 'Content-Type: application/json' \
+#     -d '{"messages": [...], "format": "openai", "model": "local_medium"}'
+#
+#   # Rust library
+#   use cwc_session::{optimize, SessionManagerConfig};
+#   let (optimized, report) = optimize(&messages, SessionManagerConfig::default())?;
+
+# Minimal pipeline config — these won't be used but the file needs to parse.
+[mode]
+mode = "simple"
+
+[model]
+llm_endpoint = "http://localhost:8080"   # Not actually called for session-only use
+embedding_model = "models/unused.onnx"
+context_window = 32768                   # Match your target model's context
+max_output_tokens = 4096
+
+[retrieval]
+dense_top_k = 50
+sparse_top_k = 50
+final_top_k = 10
+mmr_lambda = 0.7
+
+[budget]
+instruction_fraction = 0.15
+sources_fraction = 0.65
+memory_fraction = 0.10
+output_fraction = 0.10
+
+[verify]
+check_citations = true
+check_schema = true
+check_abstention = true
+
+[paths]
+data_dir = "data"
+index_dir = "index"
+models_dir = "models"
+
+# --- Session configuration reference ---
+#
+# SessionManagerConfig (set via code or --model flag):
+#
+# Model profiles:
+#   local_small   — 7-8B,  8K ctx,  aggressive compaction, nudge every result
+#   local_medium  — 14-32B, 32K ctx, moderate compaction, nudge every result
+#   local_large   — 70B, 128K ctx,   moderate compaction, nudge every 2 results
+#   cloud_weak    — Haiku-class, 32K, moderate compaction, nudge every 3 results
+#   cloud_strong  — Opus/GPT-4, 200K, minimal compaction, no nudges
+#
+# Memory:
+#   memory_max_bytes   = 2048    # Max memory store size in bytes
+#   memory_max_entries = 30      # Max number of memory facts
+#
+# Consolidation (heuristic — merges related facts):
+#   consolidation.enabled        = true
+#   consolidation.min_group_size = 3     # Min facts to form a group
+#   consolidation.savings_pct    = 30    # Min byte savings to consolidate
+#
+# LLM consolidation (requires LLM — smarter merging):
+#   llm_consolidation.enabled            = false
+#   llm_consolidation.max_tokens         = 128
+#   llm_consolidation.max_groups         = 3
+#   llm_consolidation.cross_group_insights = false
+#
+# Reinforcement (goal nudges injected between turns):
+#   reinforcement.enabled                    = true
+#   reinforcement.nudge_every_n_tool_results = 1
+#   reinforcement.include_goal               = true
+#   reinforcement.max_nudge_tokens           = 80
+#
+# Pre-flight validation:
+#   preflight.max_consecutive_same_tool  = 3
+#   preflight.max_tool_calls_without_user = 15

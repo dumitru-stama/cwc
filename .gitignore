@@ -1,0 +1,37 @@
+**/target/
+
+# ONNX models (large binaries, user downloads separately)
+models/
+*.onnx
+*.onnx_data
+
+# Environment and credentials
+.env
+.env.*
+credentials.json
+
+# Database files
+*.db
+*.sqlite
+
+# Embedding cache (regenerable)
+data/embed_cache/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+Thumbs.db
+
+# Evaluation results (can be large, regenerable)
+eval/results/
+
+# Tantivy index files (regenerable)
+data/sparse_index/
+
+# Compiled prompt debug output
+*.prompt.debug

@@ -1,0 +1,16 @@
+[package]
+name = "cwc-eval"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "Evaluation harness with retrieval and generation metrics, benchmarks, and A/B testing"
+authors = ["Dumitru Stama"]
+
+[dependencies]
+cwc-core = { path = "../cwc-core" }
+serde = { workspace = true }
+serde_json = { workspace = true }
+thiserror = { workspace = true }
+uuid = { workspace = true }
+regex = { workspace = true }

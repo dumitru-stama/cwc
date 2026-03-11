@@ -1,0 +1,51 @@
+# CWC — Large Local Model (70B parameters)
+#
+# Tuned for models like Llama-3.1-70B, Mixtral-8x22B, Qwen-72B.
+# These models handle large context well but still benefit from
+# evidence ordering and session management on long tasks.
+
+[mode]
+mode = "complex"                         # 70B models benefit from cross-encoder reranking
+
+[model]
+llm_endpoint = "http://localhost:8080"
+embedding_model = "models/bge-small-en-v1.5.onnx"
+rerank_model = "models/bge-reranker-base.onnx"   # Cross-encoder for complex mode
+context_window = 131072                  # 128K context typical for 70B
+max_output_tokens = 4096
+
+[retrieval]
+dense_top_k = 100                        # Cast a wide net
+sparse_top_k = 100
+rerank_top_k = 30                        # Cross-encoder narrows to top 30
+final_top_k = 15                         # Generous final selection
+mmr_lambda = 0.7                         # Balanced diversity
+rrf_k = 60.0
+
+[budget]
+instruction_fraction = 0.10              # Less instruction overhead needed
+sources_fraction = 0.70                  # More room for evidence
+memory_fraction = 0.10
+output_fraction = 0.10
+
+[verify]
+check_citations = true
+check_schema = true
+check_abstention = true
+
+[paths]
+data_dir = "data"
+index_dir = "index"
+models_dir = "models"
+
+# --- Session management ---
+# Use --model local_large on CLI, or in code:
+#
+#   let config = recommend_config(Some("local_large"), 131072, 4096);
+#
+# The local_large profile uses:
+#   - Moderate compaction
+#   - Nudge every 2 tool results
+#   - Sliding window at 50% utilization
+#   - Hard reset at 60%
+#   - 4000 tail tokens preserved

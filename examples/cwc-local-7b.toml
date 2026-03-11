@@ -1,0 +1,50 @@
+# CWC — Small Local Model (7-8B parameters)
+#
+# Tuned for models like Mistral-7B, Llama-3.1-8B, Gemma-7B.
+# These models have small context windows and benefit from aggressive
+# compaction and frequent nudging to stay on task.
+
+[mode]
+mode = "simple"                          # Complex mode too expensive for 7B
+
+[model]
+llm_endpoint = "http://localhost:8080"
+embedding_model = "models/bge-small-en-v1.5.onnx"
+context_window = 8192                    # Typical 7B context limit
+max_output_tokens = 1024                 # Keep short — 7B models ramble with large budgets
+
+[retrieval]
+dense_top_k = 30                         # Fewer candidates — less to fit
+sparse_top_k = 30
+final_top_k = 5                          # Only the best evidence
+mmr_lambda = 0.8                         # Favor relevance over diversity (small budget)
+
+[budget]
+instruction_fraction = 0.15
+sources_fraction = 0.55                  # Less room for sources
+memory_fraction = 0.15                   # More room for memory (agents need it)
+output_fraction = 0.15
+
+[verify]
+check_citations = true
+check_schema = true
+check_abstention = true
+
+[paths]
+data_dir = "data"
+index_dir = "index"
+models_dir = "models"
+
+# --- Session management settings (used by cwc session commands) ---
+# These go in SessionManagerConfig, not CwcConfig.
+# Pass via --model local_small on the CLI, or set in code:
+#
+#   use cwc_session::eval::tuning::recommend_config;
+#   let config = recommend_config(Some("local_small"), 8192, 1024);
+#
+# The local_small profile uses:
+#   - Aggressive compaction (tool outputs compressed heavily)
+#   - Nudge every tool result (frequent goal reminders)
+#   - Sliding window at 45% utilization (trims early)
+#   - Hard reset at 55% (rebuilds from memory early)
+#   - 1500 tail tokens preserved during trim

@@ -1,0 +1,21 @@
+[package]
+name = "cwc-llm"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "LLM client for llama.cpp and vLLM with GBNF grammar generation and streaming"
+authors = ["Dumitru Stama"]
+
+[dependencies]
+cwc-core = { path = "../cwc-core" }
+reqwest = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+thiserror = { workspace = true }
+tracing = { workspace = true }
+tokio = { workspace = true }
+async-trait = { workspace = true }
+regex = { workspace = true }
+futures = { workspace = true }
+tokio-stream = { workspace = true }
